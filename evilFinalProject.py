@@ -34,6 +34,41 @@ hashed_words_file = "10k_most_common_hashed.txt" #output file name
 hash_type="md5"
 
 #crack hashed passwords from packet and compare it to the most common passwords
+def create_hash_md5_text_file(input_list, output_file_name, hash_type):
+        input_list = list(map(str.strip, input_list)) #strips away the /n
+        hashesToExport = []
+
+        # foreach word in the file look for the hash types
+        for word in input_list:
+            if hash_type == "md5":
+                crypt = hashlib.md5()
+            elif hash_type == "sha1":
+                crypt = hashlib.sha1() 
+            crypt.update(bytes(word, encoding='utf-8'))
+            hashOfWord = crypt.hexdigest()
+            
+            hashesToExport.append(hashOfWord)
+        print("Creating hash text file: {} ...".format(output_file_name))
+
+        #create output file
+        with open(output_file_name, 'w') as f:
+            for hashOfWord in hashesToExport:
+                f.write("%s/n" % hashOfWord)
+        print("{} has been successfully created".format(output_file_name))
+
+#get the list of words from the file
+def list_of_words_from_file(filename):
+        print("Opening file: {}".format(filename))
+        list_of_words = open(filename, 'r', errors='ignore').readlines()
+        print("Stripping breaklines from file: {}".format(filename))
+        list_of_words = list(map(str.strip, list_of_words))
+        return(list_of_words)
+
+#get words from the file
+words = list_of_words_from_file(english_password_list)
+#create hash
+create_hash_md5_text_file(words, hashed_words_file, hash_type)
+
 
 
 
