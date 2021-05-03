@@ -149,6 +149,29 @@ elif no_of_cpu == 4:
 	p4.join()
 	print("Cracking has been completed")
 
+elif no_of_cpu == 6:
+    p1 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[0],"1"])
+	p2 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[1],"2"])
+	p3 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[2],"3"])
+	p4 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[3],"4"])
+    p5 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[3],"5"])
+    p6 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[3],"6"])
+
+    p1.start()
+	p2.start()
+	p3.start()
+	p4.start()
+    p5.start()
+    p6.start()
+
+	p1.join() # waits until the process is completed
+	p2.join()
+	p3.join()
+	p4.join()
+    p5.join()
+    p6.join()
+	print("Cracking has been completed")    
+
 else: 
     print("Error message: You have {} CPU. This code has been constructed for either 2 or 4 CPU.".format(no_of_cpu))
 	print("How to fix: Go to line 52-77. I have hardcoded the number of processors to run this. You'll just have to change the if-else statement to cater to your number of cpu.")
