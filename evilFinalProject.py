@@ -4,7 +4,7 @@ import hashlib
 import time
 import multiprocessing
 import math
-# from scapy.all import *
+from scapy.all import *
 #Ethical Hacking Python Application
 
 #function declarations
@@ -81,6 +81,7 @@ def chunks(LIST, NUMBER_OF_PARTS):
         # Create an index range for l of n items:
         yield LIST[i:i+NUMBER_OF_PARTS]
 
+#PASSWORDS FROM PACKET WILL NEED TO BE DUMPED INTO A FILE NAMED PASSWORDS_FROM_PACKETS.TXT
 passwords_from_packet = 'passwords_from_packet.txt'
 
 no_of_cpu = multiprocessing.cpu_count()
