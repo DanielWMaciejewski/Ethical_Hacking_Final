@@ -12,11 +12,11 @@ RED = Fore.RED
 RESET = Fore.RESET
 
 
-def sniff_packets(iface=None):
+def sniff_packets(iface):
     # Sniff 80 port packets with iface
     if iface:
         # port 80 for http
-        sniff(filter="port 80", prn=process_packet, iface=iface, store=False)
+        sniff(filter="port 80", prn=process_packet, iface=textInterface, store=False)
     else:
         # sniff with default interface
         sniff(filter="port 80", prn=process_packet, store=False)
@@ -47,4 +47,4 @@ else:
     args = parser.parse_args()
     iface = args.iface
     show_raw = args.show_raw
-    sniff_packets(iface)
+    sniff_packets(textInterface)

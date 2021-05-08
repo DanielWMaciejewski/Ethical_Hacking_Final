@@ -14,7 +14,7 @@ from scapy.all import *
 
 
 
-def executeScript():
+
     
 #MitM Section
 
@@ -189,7 +189,7 @@ window.title("Group 1 Final Project")#Project Title
 window.geometry('300x200')#Set size of the pane
 
 #Elements of the GUI
-
+#Get the network resource names 
 #Label for chosen interface
 labelInterface = Label(window,text="Select Interface")
 labelInterface.grid(column=0,row=0)
@@ -210,14 +210,25 @@ textVictimIP.grid(column=1,row=2)
 labelRouterIP = Label(window,text="Router IP")
 labelRouterIP.grid(column=0,row=3)
 
-
 #Text Input for router IP
 textRouterIP = Entry(window,width=20)
 textRouterIP.grid(column=1,row=3)
 
-#Button for handling execute call
-buttonMitM = Button(window,text="Hack!",command=mitm())
-buttonMitM.grid(column=0, rows=4)
+#GUI Buttons
+
+#Button for handling mitm() execute call
+buttonMitM = Button(window,text="MitM",command=mitm())
+buttonMitM.grid(column=1, row=4)
+
+#Button for handling sniff_packets() execute call
+buttonPacketSniffer = Button(window,text="Engage Packet Sniff",command=sniff_packets(textInterface))
+buttonPacketSniffer.grid(column=2,row=0)
+
+#button for handling process_packets() call
+buttonPacketProcessor = Button(window,text="Engage Packet Processor",command=process_packets(packet))
+buttonPacketProcessor.grid(column=2,row=1)
+
+#Button for handling
 
 #Button for closing the application
 buttonClose= Button(window,text="Quit",command="close")
