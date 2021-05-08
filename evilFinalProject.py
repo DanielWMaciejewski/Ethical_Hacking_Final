@@ -5,6 +5,8 @@ import time
 import multiprocessing
 import math
 from scapy.all import *
+import mitm.Python
+import packetsniffer
 #Ethical Hacking Python Application
 
 #variable declations
