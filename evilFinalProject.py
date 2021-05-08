@@ -216,8 +216,8 @@ textRouterIP = Entry(window,width=20)
 textRouterIP.grid(column=1,row=3)
 
 #Button for handling execute call
-buttonHack = Button(window,text="Hack!",command="confirm")
-buttonHack.grid(column=0, rows=4)
+buttonMitM = Button(window,text="Hack!",command=mitm())
+buttonMitM.grid(column=0, rows=4)
 
 #Button for closing the application
 buttonClose= Button(window,text="Quit",command="close")
