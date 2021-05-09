@@ -9,7 +9,35 @@ from colorama import init, Fore  # Color for HTTP requests
 #Ethical Hacking Python Application
 
 #variable declations
+#Elements of the GUI
+#GUI Rigging
+window =Tk() #create tkinter GUI object
+window.title("Group 1 Final Project")#Project Title
+window.geometry('300x200')#Set size of the pane
+#Get the network resource names 
+#Label for chosen interface
+labelInterface = Label(window,text="Select Interface")
+labelInterface.grid(column=0,row=0)
 
+#Text input for chosen interface
+textInterface = Entry(window,width=20)
+textInterface.grid(column=1,row=0)
+
+#Label for victim IP input
+labelVictimIP = Label(window,text="Victim IP")
+labelVictimIP.grid(column=0,row=2)
+
+#Text input for victim IP
+textVictimIP = Entry(window,width=20)
+textVictimIP.grid(column=1,row=2)
+
+#Label for router IP input
+labelRouterIP = Label(window,text="Router IP")
+labelRouterIP.grid(column=0,row=3)
+
+#Text Input for router IP
+textRouterIP = Entry(window,width=20)
+textRouterIP.grid(column=1,row=3)
 
 #function declarations
 
@@ -89,7 +117,7 @@ def mitm():
 
 
 #Packet Sniff
-init()
+init()#this can probably go
 GREEN = Fore.GREEN
 RED = Fore.RED
 RESET = Fore.RESET
@@ -119,10 +147,11 @@ def process_packet(packet):
             # If the red flag shows, it will POST the raw data
             print(f"\n{RED}[*] Some useful Raw data: {packet[Raw].load}{RESET}")
 
-
+#this section is normally to call a class containing this code I think, might be wrong 
 if __name__ != "__main__":
     pass
 else:
+    #delete the if__name__ section and just throw this all into a function labelled sniffExecute() or soemthing of the like
     parser = argparse.ArgumentParser(description="HTTP Packet Sniffer")
     parser.add_argument("-i", "--iface")
     parser.add_argument("--show-raw", dest="show_raw", action="store_true")
@@ -287,36 +316,9 @@ else:
 
 
 
-#GUI Rigging
-window =Tk() #create tkinter GUI object
-window.title("Group 1 Final Project")#Project Title
-window.geometry('300x200')#Set size of the pane
+
 
 #Elements of the GUI
-#Get the network resource names 
-#Label for chosen interface
-labelInterface = Label(window,text="Select Interface")
-labelInterface.grid(column=0,row=0)
-
-#Text input for chosen interface
-textInterface = Entry(window,width=20)
-textInterface.grid(column=1,row=0)
-
-#Label for victim IP input
-labelVictimIP = Label(window,text="Victim IP")
-labelVictimIP.grid(column=0,row=2)
-
-#Text input for victim IP
-textVictimIP = Entry(window,width=20)
-textVictimIP.grid(column=1,row=2)
-
-#Label for router IP input
-labelRouterIP = Label(window,text="Router IP")
-labelRouterIP.grid(column=0,row=3)
-
-#Text Input for router IP
-textRouterIP = Entry(window,width=20)
-textRouterIP.grid(column=1,row=3)
 
 #GUI Buttons
 
