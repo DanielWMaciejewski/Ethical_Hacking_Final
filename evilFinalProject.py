@@ -66,11 +66,13 @@ def get_mac(IP):
 
 # restore ARP
 def restoreARP():
-    print("\n Restoring Target")
+    print("\nRestoring Target")
     victimMAC = get_mac(textVictimIP)
     gatewayMAC = get_mac(textRouterIP)
     send(ARP(op = 2, pdst = textRouterIP, psrc = textVictimIP, hwdst = "ff:ff:ff:ff:ff:ff",
-             hwsrc = victimMac), count = 7)
+             hwsrc = victimMAC), count = 7)
+    send(ARP(op = 2, pdst = textVictimIP, psrc = textRouterIP, hwdst = "ff:ff:ff:ff:ff:ff",
+             hwsrc = gatewayMAC), count = 7)
     print("Disabling IP Forwarding")
     os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
     print("Exiting")
