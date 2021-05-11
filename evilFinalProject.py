@@ -58,7 +58,7 @@ os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
 # send ARP requests
 def get_mac(IP):
     conf.verb = 0
-    ans, unans = srp(Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst = IP, timeout = 2,
+    ans, unans = srp(Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst = IP), timeout = 2,
     iface = textInterface, inter = 0.1)
     for snd, rcv in ans:
         print rcv.sprintf(r"%Ether.src%")
