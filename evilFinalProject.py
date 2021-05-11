@@ -61,7 +61,7 @@ def get_mac(IP):
     ans, unans = srp(Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst = IP, timeout = 2,
     iface = textInterface, inter = 0.1)
     for snd, rcv in ans:
-        return rcv.sprintf(r"%Ether.src%")
+        print rcv.sprintf(r"%Ether.src%")
 
 
 # restore ARP
