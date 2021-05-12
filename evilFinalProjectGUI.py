@@ -19,46 +19,45 @@ labelNo_Of_CPU = Label(window,text="Number of CPU Cores (2,3,6)")
 labelNo_Of_CPU.grid(column=0,row=3)
 
 #Entry field for number of CPU cores
-textNo_Of_CPU = Entry(window,width=20)
-textNo_Of_CPU.grid(column=1,row=3)
+entryTextNo_Of_CPU = Entry(window,width=20)
+entryTextNo_Of_CPU.grid(column=1,row=3)
 
 # Label for chosen interface
 labelInterface = Label(window, text="Select Interface")
 labelInterface.grid(column=0, row=0)
 
 # Text input for chosen interface
-textInterface = Entry(window, width=20)
-textInterface.grid(column=1, row=0)
+entryTextInterface = Entry(window, width=20)
+entryTextInterface.grid(column=1, row=0)
 
 # Label for victim IP input
 labelVictimIP = Label(window, text="Victim IP")
 labelVictimIP.grid(column=0, row=1)
 
 # Text input for victim IP
-textVictimIP = Entry(window, width=20)
-textVictimIP.grid(column=1, row=1)
+entryTextVictimIP = Entry(window, width=20)
+entryTextVictimIP.grid(column=1, row=1)
 
 # Label for router IP input
 labelRouterIP = Label(window, text="Router IP")
 labelRouterIP.grid(column=0, row=2)
 
 # Text Input for router IP
-textRouterIP = Entry(window, width=20)
-textRouterIP.grid(column=1, row=2)
+entryTextRouterIP = Entry(window, width=20)
+entryTextRouterIP.grid(column=1, row=2)
 
 def storeVariables():
-    #store the variable textNo_Of_CPU 
-    varTextNo_Of_CPU= textNo_Of_CPU.get()
-    print(varTextNo_Of_CPU)
+    textNo_Of_CPU = entryTextNo_Of_CPU.get()
+    print(textNo_Of_CPU)
     #store the variable textInterface
-    varTextInterface = textInterface.get()
-    print(varTextInterface)
+    textInterface = entryTextInterface.get()
+    print(textInterface)
     #store the variable 
-    varTextVictimIP = textVictimIP.get()
-    print(varTextVictimIP)
+    textVictimIP = entryTextVictimIP.get()
+    print(textVictimIP)
     #store the variable textRouterIP
-    varTextRouterIP = textRouterIP.get()
-    print(varTextRouterIP)
+    textRouterIP = entryTextRouterIP.get()
+    print(textRouterIP)
     outputText.insert(END,"Input Variables Stored!\n")
 
 # Button for handling mitm() execute call
