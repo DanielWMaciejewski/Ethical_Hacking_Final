@@ -120,11 +120,11 @@ def sniff_packets(iface):
     if iface:
         # port 80 for http
         sniff(filter="port 80", prn=process_packet, iface=textInterface, store=False)
-	process_packet(packet)
+	#process_packet(packet)
     elif:
         # sniff with default interface
         sniff(filter="port 80", prn=process_packet, store=False)
-	process_packet(packet)
+	#process_packet(packet)
     else: 
 	pass
 
