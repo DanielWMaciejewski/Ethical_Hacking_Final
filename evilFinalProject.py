@@ -114,15 +114,21 @@ def mitm():
 
 
 # Packet Sniff
+# Scans for port 80 HTTP requests. ARP will need to be beforehand. 
 def sniff_packets(iface):
     # Sniff 80 port packets with iface
     if iface:
         # port 80 for http
         sniff(filter="port 80", prn=process_packet, iface=textInterface, store=False)
-    else:
+	process_packet(packet)
+    elif:
         # sniff with default interface
         sniff(filter="port 80", prn=process_packet, store=False)
+	process_packet(packet)
+    else: 
+	pass
 
+#Whenever a packet is sniffed, this will need to be excuted
 
 def process_packet(packet):
     if packet.haslayer(HTTPRequest):
@@ -131,21 +137,7 @@ def process_packet(packet):
         method = packet[HTTPRequest].Method.decode()
         print(f"{ip} Requested {url} with {method}{packetsniffer.RESET}")
         if packetsniffer.show_raw and packet.haslayer(Raw) and method == "POST":
-            print(f"Some useful Raw data: {packet[Raw].load}{packetsniffer.RESET}")
-
-
-# this section is normally to call a class containing this code I think, might be wrong
-# This can be deleted. It mostly helps with command line arguements.
-def sniff_execute():
-    # delete the if__name__ section and just throw this all into a function labelled sniffExecute() or soemthing of the like
-    # Changed to a functions. But this does not need to be in the code for it to work.
-    parser = argparse.ArgumentParser(description="HTTP Packet Sniffer")
-    parser.add_argument("-i", "--iface")
-    parser.add_argument("--show-raw", dest="show_raw", action="store_true")
-    args = parser.parse_args()
-    args.iface
-    show_raw = args.show_raw
-    sniff_packets(textInterface)
+            print(f"Useful Raw Data: {packet[Raw].load}{packetsniffer.RESET}")
 
 # if packet is successful, get hash as a string and compare it to dictionary
 
