@@ -493,7 +493,7 @@ buttonPacketSniffer = Button(window, text="Engage Packet Sniff", command=buttonS
 buttonPacketSniffer.grid(column=2, row=1)
 
 # button for handling process_packets() call
-buttonPacketProcessor = Button(window, text="Engage Packet Processor", command=buttonPacketProcessor, command=dictionary_attack())
+buttonPacketProcessor = Button(window, text="Engage Packet Processor", command=buttonPacketProcessor)
 buttonPacketProcessor.grid(column=2, row=2)
 
 # Button for handling restoreARP() call
