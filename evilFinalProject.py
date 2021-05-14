@@ -322,16 +322,16 @@ def buttonrestoreARP():
     masterRestoreARPCall(textInterface,textVictimIP,textRouterIP)
     outputText.insert(END,"Restore ARP Engaged\n")
 def storeVariables():
-    textNo_Of_CPU = entryTextNo_Of_CPU.get()
+   global textNo_Of_CPU = entryTextNo_Of_CPU.get()
     print(textNo_Of_CPU)
     #store the variable textInterface
-    textInterface = entryTextInterface.get()
+    global textInterface = entryTextInterface.get()
     print(textInterface)
     #store the variable 
-    textVictimIP = entryTextVictimIP.get()
+    global textVictimIP = entryTextVictimIP.get()
     print(textVictimIP)
     #store the variable textRouterIP
-    textRouterIP = entryTextRouterIP.get()
+    global textRouterIP = entryTextRouterIP.get()
     print(textRouterIP)
     outputText.insert(END,"Input Variables Stored!\n")
 
