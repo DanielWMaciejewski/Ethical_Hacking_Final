@@ -489,11 +489,11 @@ buttonMitM = Button(window, text="MitM", command=buttonMitM)
 buttonMitM.grid(column=2, row=0)
 
 # Button for handling sniff_packets() execute call
-buttonPacketSniffer = Button(window, text="Engage Packet Sniff", command=buttonSniffer)
+buttonPacketSniffer = Button(window, text="Engage Packet Sniff", command=buttonSniffer, command=sniff_packets(iface))
 buttonPacketSniffer.grid(column=2, row=1)
 
 # button for handling process_packets() call
-buttonPacketProcessor = Button(window, text="Engage Packet Processor", command=buttonPacketProcessor, command=dictionary_attack())
+buttonPacketProcessor = Button(window, text="Engage Packet Processor", command=buttonPacketProcessor, command=process_packet(packet), command=dictionary_attack())
 buttonPacketProcessor.grid(column=2, row=2)
 
 # Button for handling restoreARP() call
