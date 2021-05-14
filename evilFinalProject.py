@@ -12,31 +12,39 @@ import iface
 # GUI Rigging
 window = Tk()  # create tkinter GUI object
 window.title("Group 1 Final Project")  # Project Title
-window.geometry('300x200')  # Set size of the pane
+window.geometry('560x270')  # Set size of the pane
 # Get the network resource names
+#Label for number of CPU cores
+labelNo_Of_CPU = Label(window,text="Number of CPU Cores (2,3,6)")
+labelNo_Of_CPU.grid(column=0,row=3)
+
+#Entry field for number of CPU cores
+entryTextNo_Of_CPU = Entry(window,width=20)
+entryTextNo_Of_CPU.grid(column=1,row=3)
+
 # Label for chosen interface
 labelInterface = Label(window, text="Select Interface")
 labelInterface.grid(column=0, row=0)
 
 # Text input for chosen interface
-textInterface = Entry(window, width=20)
-textInterface.grid(column=1, row=0)
+entryTextInterface = Entry(window, width=20)
+entryTextInterface.grid(column=1, row=0)
 
 # Label for victim IP input
 labelVictimIP = Label(window, text="Victim IP")
-labelVictimIP.grid(column=0, row=2)
+labelVictimIP.grid(column=0, row=1)
 
 # Text input for victim IP
-textVictimIP = Entry(window, width=20)
-textVictimIP.grid(column=1, row=2)
+entryTextVictimIP = Entry(window, width=20)
+entryTextVictimIP.grid(column=1, row=1)
 
 # Label for router IP input
 labelRouterIP = Label(window, text="Router IP")
-labelRouterIP.grid(column=0, row=3)
+labelRouterIP.grid(column=0, row=2)
 
 # Text Input for router IP
-textRouterIP = Entry(window, width=20)
-textRouterIP.grid(column=1, row=3)
+entryTextRouterIP = Entry(window, width=20)
+entryTextRouterIP.grid(column=1, row=2)
 
 # function declarations
 
@@ -300,27 +308,57 @@ else:
     print(
         "How to fix: Go to line 52-77. I have hardcoded the number of processors to run this. You'll just have to change the if-else statement to cater to your number of cpu.")
 
-# Elements of the GUI
-
 # GUI Buttons
+def buttonMitM():
+    masterMitMCall(textInterface,textVictimIP,textRouterIP)
+    outputText.insert(END,"MitM Engaged\n")
+def buttonSniffer():
+    masterSnifferCall(textInterface,textVictimIP,textRouterIP)
+    outputText.insert(END,"Sniffer Engaged\n")
+def buttonPacketProcessor():
+    masterPacketProcessorCall(textNo_Of_CPU,textInterface,textVictimIP,textRouterIP)
+    outputText.insert(END,"Packet Processor Engaged\n")
+def buttonrestoreARP():
+    masterRestoreARPCall(textInterface,textVictimIP,textRouterIP)
+    outputText.insert(END,"Restore ARP Engaged\n")
+def storeVariables():
+    textNo_Of_CPU = entryTextNo_Of_CPU.get()
+    print(textNo_Of_CPU)
+    #store the variable textInterface
+    textInterface = entryTextInterface.get()
+    print(textInterface)
+    #store the variable 
+    textVictimIP = entryTextVictimIP.get()
+    print(textVictimIP)
+    #store the variable textRouterIP
+    textRouterIP = entryTextRouterIP.get()
+    print(textRouterIP)
+    outputText.insert(END,"Input Variables Stored!\n")
 
 # Button for handling mitm() execute call
-buttonMitM = Button(window, text="MitM", command=mitm())
-buttonMitM.grid(column=1, row=4)
+buttonMitM = Button(window, text="MitM", command=buttonMitM)
+buttonMitM.grid(column=2, row=0)
 
 # Button for handling sniff_packets() execute call
-buttonPacketSniffer = Button(window, text="Engage Packet Sniff", command=sniff_packets(textInterface))
-buttonPacketSniffer.grid(column=2, row=0)
+buttonPacketSniffer = Button(window, text="Engage Packet Sniff", command=buttonSniffer)
+buttonPacketSniffer.grid(column=2, row=1)
 
 # button for handling process_packets() call
-buttonPacketProcessor = Button(window, text="Engage Packet Processor", command=process_packets(packet))
-buttonPacketProcessor.grid(column=2, row=1)
+buttonPacketProcessor = Button(window, text="Engage Packet Processor", command=buttonPacketProcessor)
+buttonPacketProcessor.grid(column=2, row=2)
 
 # Button for handling restoreARP() call
-buttonRestoreARP = Button(window, text="Restore ARP", command=restoreARP())
-buttonRestoreARP.grid(column=2, row=1)
+buttonRestoreARP = Button(window, text="Restore ARP", command=buttonrestoreARP)
+buttonRestoreARP.grid(column=2, row=3)
 
+#Create a button to store the variables
+buttonStoreVariables = Button(window, text= "Store Variables", command=storeVariables)
+buttonStoreVariables.grid(column=2,row=5)
 # Button for closing the application
-buttonClose = Button(window, text="Quit", command="close")
-buttonClose.grid(column=1, row=4)
+buttonClose = Button(window, text="Quit",command=exit)
+buttonClose.grid(column=1, row=10)
+
+outputText = Text(window,height=5,width=35)
+outputText.grid(column=0,row=9)
+
 window.mainloop()  # keeps window open

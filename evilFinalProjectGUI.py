@@ -45,7 +45,15 @@ labelRouterIP.grid(column=0, row=2)
 # Text Input for router IP
 entryTextRouterIP = Entry(window, width=20)
 entryTextRouterIP.grid(column=1, row=2)
-
+# GUI Buttons
+def buttonMitM():
+    outputText.insert(END,"MitM Engaged\n")
+def buttonSniffer():
+    outputText.insert(END,"Sniffer Engaged\n")
+def buttonPacketProcessor():
+    outputText.insert(END,"Packet Processor Engaged\n")
+def buttonrestoreARP():
+    outputText.insert(END,"Restore ARP Engaged\n")
 def storeVariables():
     textNo_Of_CPU = entryTextNo_Of_CPU.get()
     print(textNo_Of_CPU)
